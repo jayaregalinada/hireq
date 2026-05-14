@@ -1,17 +1,17 @@
-import { readFileSync } from 'fs'
-import { join } from 'path'
 import { streamObject } from 'ai'
 import { model } from '@/lib/ai'
 import { questionsSchema } from '@/lib/schema'
 
-const promptTemplate = readFileSync(
-  join(process.cwd(), 'prompts/questions.md'),
-  'utf-8'
-)
+const PROMPT = (jobTitle: string) =>
+  `You are an expert HR interviewer with deep knowledge of hiring across industries.
 
-function buildPrompt(jobTitle: string) {
-  return promptTemplate.replace('{jobTitle}', jobTitle)
-}
+Generate exactly 3 thoughtful, role-specific interview questions for a candidate applying for the role of: ${jobTitle}
+
+Requirements:
+- Each question should reveal something meaningful about candidate fit for this specific role
+- Mix behavioral and situational questions
+- Avoid generic questions that could apply to any job
+- For each question, provide a one-sentence rationale explaining what it reveals`
 
 export async function POST(req: Request) {
   const { jobTitle } = await req.json()
@@ -24,7 +24,7 @@ export async function POST(req: Request) {
   const result = streamObject({
     model,
     schema: questionsSchema,
-    prompt: buildPrompt(trimmed),
+    prompt: PROMPT(trimmed),
   })
 
   return result.toTextStreamResponse()
