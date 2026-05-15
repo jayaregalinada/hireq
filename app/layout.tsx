@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Interview Question Generator",
+  title: "HireQ",
   description: "Generate role-specific interview questions powered by AI",
 };
 
