@@ -1,70 +1,20 @@
 'use client'
 
-import { parsePartialJson } from 'ai'
-import { useState, useCallback } from 'react'
+import { useState } from 'react'
 import { Loader2 } from 'lucide-react'
-import { type Question } from '@/lib/schema'
+import { useQuestions } from '@/hooks/use-questions'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
-type PartialQuestion = Partial<Question> | undefined
-
-interface PartialObject {
-  questions?: PartialQuestion[]
-}
-
 export default function Home() {
   const [jobTitle, setJobTitle] = useState('')
-  const [object, setObject] = useState<PartialObject | null>(null)
-  const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState<Error | null>(null)
-
-  const submit = useCallback(async (payload: { jobTitle: string }) => {
-    setIsLoading(true)
-    setError(null)
-    setObject(null)
-
-    try {
-      const res = await fetch('/api/questions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      })
-
-      if (!res.ok) {
-        throw new Error(`Request failed: ${res.status}`)
-      }
-
-      const reader = res.body?.getReader()
-      if (!reader) throw new Error('No response body')
-
-      const decoder = new TextDecoder()
-      let accumulated = ''
-
-      while (true) {
-        const { done, value } = await reader.read()
-        if (done) break
-        accumulated += decoder.decode(value, { stream: true })
-        const parsed = await parsePartialJson(accumulated)
-        if (
-          parsed.state === 'successful-parse' ||
-          parsed.state === 'repaired-parse'
-        ) {
-          setObject(parsed.value as PartialObject)
-        }
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err : new Error('Unknown error'))
-    } finally {
-      setIsLoading(false)
-    }
-  }, [])
+  const { object, submit, isLoading, error } = useQuestions()
 
   function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (!jobTitle.trim()) return
-    submit({ jobTitle })
+    submit(jobTitle)
   }
 
   return (
