@@ -18,7 +18,7 @@ export default function Home() {
   }
 
   return (
-    <main className="max-w-2xl mx-auto px-4 py-16">
+    <main className="w-full max-w-2xl mx-auto px-4 py-16">
       <h1 className="text-2xl font-bold mb-2">Interview Question Generator</h1>
       <p className="text-muted-foreground mb-8">
         Enter a job title to get 3 role-specific interview questions.
