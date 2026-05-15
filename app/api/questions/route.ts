@@ -1,10 +1,10 @@
 import { streamText } from 'ai'
 import { model } from '@/lib/ai'
 
-const PROMPT = (jobTitle: string) =>
-  `You are an expert HR interviewer with deep knowledge of hiring across industries.
+const SYSTEM = 'You output only raw JSON. Never use markdown code fences or any prose.'
 
-Generate exactly 3 thoughtful, role-specific interview questions for a candidate applying for the role of: ${jobTitle}
+const PROMPT = (jobTitle: string) =>
+  `Generate exactly 3 thoughtful, role-specific interview questions for a candidate applying for the role of: ${jobTitle}
 
 Requirements:
 - Each question should reveal something meaningful about candidate fit for this specific role
@@ -12,7 +12,7 @@ Requirements:
 - Avoid generic questions that could apply to any job
 - For each question, provide a one-sentence rationale explaining what it reveals
 
-Respond with ONLY a valid JSON object in this exact format, no markdown, no explanation:
+Respond with ONLY a valid JSON object in this exact format:
 {"questions":[{"question":"...","rationale":"..."},{"question":"...","rationale":"..."},{"question":"...","rationale":"..."}]}`
 
 export async function POST(req: Request) {
@@ -25,7 +25,9 @@ export async function POST(req: Request) {
 
   const result = streamText({
     model,
+    system: SYSTEM,
     prompt: PROMPT(trimmed),
+    providerOptions: { groq: { response_format: { type: 'json_object' } } },
   })
 
   return result.toTextStreamResponse()

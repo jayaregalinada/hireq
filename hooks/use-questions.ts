@@ -35,7 +35,10 @@ export function useQuestions() {
 
       while (true) {
         const { done, value } = await reader.read()
-        if (done) break
+        if (done) {
+          accumulated += decoder.decode()
+          break
+        }
         accumulated += decoder.decode(value, { stream: true })
         const { state, value: parsed } = await parsePartialJson(accumulated)
         if (state === 'successful-parse' || state === 'repaired-parse') {
