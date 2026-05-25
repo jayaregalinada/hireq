@@ -10,10 +10,6 @@ const inter = Inter({
 export const metadata: Metadata = {
   title: "HireQ",
   description: "Generate role-specific interview questions powered by AI",
-  icons: {
-    icon: "/app-icon.png",
-    apple: "/app-icon.png",
-  },
   openGraph: {
     title: "HireQ",
     description: "Generate role-specific interview questions powered by AI",
