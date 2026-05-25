@@ -15,6 +15,22 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "HireQ",
   description: "Generate role-specific interview questions powered by AI",
+  icons: {
+    icon: "/app-icon.png",
+    apple: "/app-icon.png",
+  },
+  openGraph: {
+    title: "HireQ",
+    description: "Generate role-specific interview questions powered by AI",
+    images: [{ url: "/logo.jpg", width: 1200, height: 630, alt: "HireQ" }],
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "HireQ",
+    description: "Generate role-specific interview questions powered by AI",
+    images: ["/logo.jpg"],
+  },
 };
 
 export default function RootLayout({

@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { useState } from 'react'
 import { Loader2 } from 'lucide-react'
 import { useQuestions } from '@/hooks/use-questions'
@@ -19,10 +20,19 @@ export default function Home() {
 
   return (
     <main className="w-full max-w-2xl mx-auto px-4 py-16">
-      <h1 className="text-2xl font-bold mb-2">HireQ</h1>
-      <p className="text-muted-foreground mb-8">
-        Enter a job title to get 3 role-specific interview questions.
-      </p>
+      <div className="mb-10">
+        <Image
+          src="/logo.jpg"
+          alt="HireQ"
+          width={160}
+          height={54}
+          className="mb-4"
+          priority
+        />
+        <p className="text-muted-foreground">
+          Enter a job title to generate 3 role-specific interview questions.
+        </p>
+      </div>
 
       <form onSubmit={handleSubmit} className="flex gap-2 mb-8">
         <Input
@@ -55,14 +65,16 @@ export default function Home() {
         <div className="space-y-4">
           {object.questions.map((q, i) =>
             q ? (
-              <Card key={i}>
-                <CardHeader>
-                  <CardTitle className="text-base">Question {i + 1}</CardTitle>
+              <Card key={i} className="border-l-4 border-l-primary">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-sm font-semibold text-primary uppercase tracking-wide">
+                    Question {i + 1}
+                  </CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-2">
-                  <p className="font-medium">{q.question}</p>
+                  <p className="font-medium text-foreground">{q.question}</p>
                   {q.rationale && (
-                    <p className="text-sm text-muted-foreground italic">{q.rationale}</p>
+                    <p className="text-sm text-muted-foreground">{q.rationale}</p>
                   )}
                 </CardContent>
               </Card>
